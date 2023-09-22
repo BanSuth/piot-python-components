@@ -46,7 +46,7 @@ class ConstrainedDeviceAppTest(unittest.TestCase):
 
 	def testRunConstrainedDeviceApp(self):
 		self.cda.startApp()
-		self.cda.stopApp(0)
+		self.cda.stopApp(0) #reason for weird test
 
 if __name__ == "__main__":
 	unittest.main()
