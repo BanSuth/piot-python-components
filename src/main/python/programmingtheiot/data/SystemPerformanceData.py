@@ -10,6 +10,7 @@
 import programmingtheiot.common.ConfigConst as ConfigConst
 
 from programmingtheiot.data.BaseIotData import BaseIotData
+from distutils.command.config import config
 
 class SystemPerformanceData(BaseIotData):
 	"""
@@ -18,27 +19,33 @@ class SystemPerformanceData(BaseIotData):
 	"""
 	DEFAULT_VAL = 0.0
 	
-	def __init__(self, d = None):
-		super(SystemPerformanceData, self).__init__(name = ConfigConst.SYSTEM_PERF_MSG, typeID = ConfigConst.SYSTEM_PERF_TYPE, d = d)
-		pass
-	
+	def __init__(self):
+		super(SystemPerformanceData,self).__init__(name = ConfigConst.SYSTEM_PERF_NAME, typeID = ConfigConst.SYSTEM_PERF_TYPE)
+		
+		self.cpuUtil = ConfigConst.DEFAULT_VAL
+		self.memUtil = ConfigConst.DEFAULT_VAL
+
 	def getCpuUtilization(self):
-		pass
+		return self.cpuUtil
 	
 	def getDiskUtilization(self):
 		pass
 	
 	def getMemoryUtilization(self):
-		pass
+		return self.memUtil
 	
 	def setCpuUtilization(self, cpuUtil):
-		pass
+		self.updateTimeStamp()
+		self.cpuUtil= cpuUtil
 	
 	def setDiskUtilization(self, diskUtil):
 		pass
 	
 	def setMemoryUtilization(self, memUtil):
-		pass
+		self.updateTimeStamp()
+		self.memUtil= memUtil
 	
 	def _handleUpdateData(self, data):
-		pass
+		if data and isinstance(data, SystemPerformanceData):
+			self.cpuUtil = data.getCpuUtilization()
+			self.memUtil = data.getMemoryUtilization()
