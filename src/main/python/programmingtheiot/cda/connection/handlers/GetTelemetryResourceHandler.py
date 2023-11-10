@@ -8,16 +8,22 @@
 # 
 
 import logging
+import aiocoap
+
+from aiocoap import Code
+from aiocoap.resource import ObservableResource
 
 import programmingtheiot.common.ConfigConst as ConfigConst
 
 from programmingtheiot.common.ConfigUtil import ConfigUtil
+from programmingtheiot.common.IDataMessageListener import IDataMessageListener
+from programmingtheiot.common.ISystemPerformanceDataListener import ISystemPerformanceDataListener 
 from programmingtheiot.common.ITelemetryDataListener import ITelemetryDataListener
 
 from programmingtheiot.data.DataUtil import DataUtil
 from programmingtheiot.data.SensorData import SensorData
 
-class GetTelemetryResourceHandler(ITelemetryDataListener):
+class GetTelemetryResourceHandler(ObservableResource, ITelemetryDataListener):
 	"""
 	Observable resource that will collect telemetry based on the given
 	name from the data message listener implementation.
@@ -28,8 +34,35 @@ class GetTelemetryResourceHandler(ITelemetryDataListener):
 	"""
 
 	def __init__(self):
-		pass
+		super().__init__()
+		
+		self.pollCycles = \
+			ConfigUtil().getInteger( \
+				section = ConfigConst.CONSTRAINED_DEVICE, \
+				key = ConfigConst.POLL_CYCLES_KEY, \
+				defaultVal = ConfigConst.DEFAULT_POLL_CYCLES)
+		
+		self.dataUtil = DataUtil()
+		self.sensorData = None
+		
+		# for testing
+		self.payload = "GetSensorData"
 		
 	def onSensorDataUpdate(self, data: SensorData = None) -> bool:
-		pass
+		logging.info("onSensorDataUpdate called with data ")
+		responseCode = Code.VALID
+		
+		return True
+	
+	async def render_get(self, request):
+		responseCode = Code.CONTENT # TODO: change to appropriate value
+		
+		if not self.sensorData:
+			self.sensorData = SensorData()
+			
+		jsonData = self.dataUtil.sensorDataToJson(self.sensorData)
+		logging.info("render_get called with data "+request)
+		#return aiocoap.message(code = Code.VALID)	
+		return aiocoap.Message(code = responseCode, payload = jsonData.encode('ascii'))
+	
 	
