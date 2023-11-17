@@ -95,6 +95,10 @@ class DeviceDataManager(IDataMessageListener):
 			self.configUtil.getBoolean( \
 				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_SERVER_KEY)
 		
+		self.enableCoapClient = \
+			self.configUtil.getBoolean( \
+				section = ConfigConst.CONSTRAINED_DEVICE, key = ConfigConst.ENABLE_COAP_CLIENT_KEY)
+		
 		self.mqttClient = None
 		
 		if self.enableMqttClient:
@@ -103,6 +107,9 @@ class DeviceDataManager(IDataMessageListener):
 		
 		if self.enableCoapServer:
 			self.coapServer = CoapServerAdapter(dataMsgListener = self)
+		
+		if self.enableCoapClient :
+			self.coapClient = CoapClientConnector(dataMsgListener = self)
 		
 		
 	def getLatestActuatorDataResponseFromCache(self, name: str = None) -> ActuatorData:
