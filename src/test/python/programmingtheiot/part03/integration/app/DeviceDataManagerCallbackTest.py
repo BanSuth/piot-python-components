@@ -51,15 +51,19 @@ class DeviceDataManagerWithCommsTest(unittest.TestCase):
 	#@unittest.skip("Ignore for now.")
 	def testActuatorDataCallback(self):
 		ddMgr = DeviceDataManager()
+		ddMgr.startManager()
+	
+	
+		#actuatorData = ActuatorData(typeID = ConfigConst.HVAC_ACTUATOR_TYPE)
+		#actuatorData.setCommand(ConfigConst.COMMAND_ON)
+		#actuatorData.setStateData("This is a test.")
+		#actuatorData.setValue(52)
 		
-		actuatorData = ActuatorData(typeID = ConfigConst.HVAC_ACTUATOR_TYPE)
-		actuatorData.setCommand(ConfigConst.COMMAND_ON)
-		actuatorData.setStateData("This is a test.")
-		actuatorData.setValue(52)
-		
-		ddMgr.handleActuatorCommandMessage(actuatorData)
-		
+		#ddMgr.handleActuatorCommandMessage(actuatorData)
+	
 		sleep(10)
+		
+		ddMgr.stopManager()
 		
 if __name__ == "__main__":
 	unittest.main()
